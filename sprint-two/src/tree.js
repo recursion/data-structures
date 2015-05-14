@@ -21,7 +21,17 @@ treeMethods.addChild = function(value){
 };
 
 treeMethods.contains = function(target){
-
+  var contains = false;
+  var recursiveContains = function(target, source) {
+    _.each(source, function(val) {
+      if (val.value === target) {
+        contains = true;
+      }
+      recursiveContains(target, val.children);
+    });
+  };
+  recursiveContains(target, this.children);
+  return contains;
 };
 
 
