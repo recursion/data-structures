@@ -16,7 +16,7 @@ var LinkedList = function(){
   };
 
   list.removeHead = function(){
-    list.head = null;
+    list.head = list.head.next;
   };
 
   list.contains = function(target){
