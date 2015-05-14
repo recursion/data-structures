@@ -1,21 +1,18 @@
 var HashTable = function(){
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
+  this.hashDiv = ']!:![';
 };
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  if (this._storage.get(i) !== undefined && this._storage.get(i) !== v) {
-    // so i managed to trap the collided value
-    // but storing it and retrieving it are something completely different
-    console.log('GOT YOU?? '+v);
-  }
-  this._storage.set(i, v);
+  var hash = k+this.hashDiv+v;
+  this._storage.set(i, [hash]);
 };
 
 HashTable.prototype.retrieve = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  return this._storage.get(i);
+  console.log(this._storage.get(i)[0].split(this.hashDiv));
 };
 
 HashTable.prototype.remove = function(k){
