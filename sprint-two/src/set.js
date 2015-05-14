@@ -24,4 +24,6 @@ setPrototype.remove = function(item){
 
 /*
  * Complexity: What is the time complexity of the above functions?
+ all functions are O(1) constant time
+ except maybe contains, because Im not sure how 'in' works?
  */
