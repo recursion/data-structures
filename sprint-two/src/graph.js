@@ -45,8 +45,7 @@ Graph.prototype.addEdge = function(fromNode, toNode){
 };
 
 Graph.prototype.removeEdge = function(fromNode, toNode){
-  console.log(this.edges[fromNode]);
-  //this.edges[fromNode].splice(this.edges[fromNode].indexOf(toNode), 1);
+  this.edges[fromNode].splice(this.edges[fromNode].indexOf(toNode), 1);
 };
 
 Graph.prototype.forEachNode = function(cb){
@@ -57,6 +56,13 @@ Graph.prototype.forEachNode = function(cb){
 
 /*
  * Complexity: What is the time complexity of the above functions?
+ addNode: O(1) constant
+ contains: O(n) linear
+ removeNode: O(n) linear
+ hasEdge: O(1) constant
+ addEdge: O(1) constant
+ removeEdge: 0(n) linear ->funky because of indexOf()
+ forEachNode: O(n) linear
  */
 
 
