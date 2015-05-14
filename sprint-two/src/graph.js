@@ -26,10 +26,14 @@ Graph.prototype.removeNode = function(node){
 };
 
 Graph.prototype.hasEdge = function(fromNode, toNode){
-  if (this.edges[fromNode].indexOf(toNode) >= 0) {
-    return true;
+  if (fromNode in this.edges) {
+    if (this.edges[fromNode].indexOf(toNode) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    throw "Error: Key "+fromNode+" does not exist in this edges object.";
   }
 };
 
@@ -41,6 +45,8 @@ Graph.prototype.addEdge = function(fromNode, toNode){
 };
 
 Graph.prototype.removeEdge = function(fromNode, toNode){
+  console.log(this.edges[fromNode]);
+  //this.edges[fromNode].splice(this.edges[fromNode].indexOf(toNode), 1);
 };
 
 Graph.prototype.forEachNode = function(cb){
