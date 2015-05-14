@@ -20,16 +20,24 @@ Graph.prototype.contains = function(node){
 Graph.prototype.removeNode = function(node){
   _.each(this.children, function(currentNode, index, collection) {
     if (currentNode === node) {
-      console.log(collection);
       collection.splice(index, 1);
     }
   });
 };
 
 Graph.prototype.hasEdge = function(fromNode, toNode){
+  if (this.edges[fromNode].indexOf(toNode) >= 0) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 Graph.prototype.addEdge = function(fromNode, toNode){
+  if (!(fromNode in this.edges)) {
+    this.edges[fromNode] = [];
+  }
+  this.edges[fromNode].push(toNode);
 };
 
 Graph.prototype.removeEdge = function(fromNode, toNode){
