@@ -5,6 +5,11 @@ var HashTable = function(){
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
+  if (this._storage.get(i) !== undefined && this._storage.get(i) !== v) {
+    // so i managed to trap the collided value
+    // but storing it and retrieving it are something completely different
+    console.log('GOT YOU?? '+v);
+  }
   this._storage.set(i, v);
 };
 
