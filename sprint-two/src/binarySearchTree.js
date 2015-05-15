@@ -32,7 +32,15 @@ BinarySearchTree.prototype.contains = function(target){
     return false;
   }
 };
-BinarySearchTree.prototype.depthFirstLog = function(callback){};
+BinarySearchTree.prototype.depthFirstLog = function(callback){
+  callback(this.value);
+  if (this.left !== undefined) {
+    this.left.depthFirstLog(callback);
+  }
+  if (this.right !== undefined) {
+    this.right.depthFirstLog(callback);
+  }
+};
 
 
 /*
