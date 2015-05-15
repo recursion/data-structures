@@ -15,11 +15,6 @@ describe('tree', function() {
     expect(tree.hasOwnProperty("parent")).to.equal(true);
   });
 
-  it('parent should point to the nodes parent', function() {
-    tree.addChild(5);
-    expect(tree.children[0].parent).to.equal(tree);
-  });
-
   it('should add children to the tree', function() {
     tree.addChild(5);
     expect(tree.children[0].value).to.equal(5);
@@ -39,6 +34,11 @@ describe('tree', function() {
     tree.addChild(5);
     tree.children[0].addChild(6);
     expect(tree.children[0].children[0].value).to.equal(6);
+  });
+
+  it('parent should point to the nodes parent', function() {
+    tree.addChild(5);
+    expect(tree.children[0].parent).to.equal(tree);
   });
 
   it('should correctly detect nested children', function(){
