@@ -10,6 +10,10 @@ describe('doublyLinkedList', function() {
     expect(linkedList).to.have.property("tail");
   });
 
+  it('should have a previous property', function() {
+    expect(linkedList).to.have.property("previous");
+  });
+
   it('should have an addToHead method', function() {
     expect(linkedList.addToHead).to.be.a("function");
   });
