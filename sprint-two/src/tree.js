@@ -17,6 +17,12 @@ treeMethods.addChild = function(value){
   this.children.push(newTree);
 };
 
+treeMethods.removeFromParent = function() {
+  var index = this.parent.children.indexOf(this.value);
+  this.parent.children.splice(index, 1);
+  this.parent = null;
+};
+
 treeMethods.contains = function(target){
   var contains = false;
   var recursiveContains = function(target, source) {

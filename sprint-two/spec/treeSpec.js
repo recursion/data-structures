@@ -15,6 +15,10 @@ describe('tree', function() {
     expect(tree.hasOwnProperty("parent")).to.equal(true);
   });
 
+  it('should have a removeFromParent method', function() {
+    expect(tree.removeFromParent).to.be.a("function");
+  });
+
   it('should add children to the tree', function() {
     tree.addChild(5);
     expect(tree.children[0].value).to.equal(5);
@@ -39,6 +43,14 @@ describe('tree', function() {
   it('parent should point to the nodes parent', function() {
     tree.addChild(5);
     expect(tree.children[0].parent).to.equal(tree);
+  });
+
+  it('should properly remove a node from parent', function() {
+    tree.addChild(5);
+    tree.children[0].addChild(6);
+    tree.children[0].removeFromParent();
+    expect(tree.contains(6)).to.equal(false);
+    expect(tree.children[0]).to.equal(undefined);
   });
 
   it('should correctly detect nested children', function(){
