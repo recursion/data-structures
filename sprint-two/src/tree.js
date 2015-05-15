@@ -17,8 +17,11 @@ treeMethods.addChild = function(value){
   this.children.push(newTree);
 };
 
-treeMethods.traverse = function() {
-
+treeMethods.traverse = function(callback) {
+  callback(this);
+  _.each(this.children, function(val) {
+    val.traverse(callback);
+  });
 };
 
 treeMethods.removeFromParent = function() {
@@ -44,6 +47,8 @@ treeMethods.contains = function(target){
 
 /*
  * Complexity: What is the time complexity of the above functions?
- addChild: O(1) constant
- contains: O(n) linear
+   addChild: O(1) constant
+   contains: O(n) linear
+   removeFromParent: O(1)
+   traverse: O(n) linear
  */

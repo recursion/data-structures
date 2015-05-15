@@ -66,4 +66,20 @@ describe('tree', function() {
     expect(tree.contains(8)).to.equal(true);
   });
 
+  it('should be able to run a function on every node in the tree via. traverse', function() {
+    tree.addChild(5);
+    tree.addChild(6);
+    tree.children[0].addChild(7);
+    tree.children[1].addChild(8);
+    var cb = function(node) {
+      if(node.value !== undefined) {
+        node.value++;
+      }
+    };
+    tree.traverse(cb);
+    expect(tree.children[0].value).to.equal(6);
+    expect(tree.children[1].value).to.equal(7);
+    expect(tree.children[0].children[0].value).to.equal(8);
+    expect(tree.children[1].children[0].value).to.equal(9);
+  });
 });
