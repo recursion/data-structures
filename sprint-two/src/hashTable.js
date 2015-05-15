@@ -6,6 +6,7 @@ var HashTable = function(){
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
   if (!this._storage.get(i)) {
+    // should this be creating a limited array instead of a regular array?
     this._storage.set(i, [k, v]);
   } else {
     var bucket = this._storage.get(i);
