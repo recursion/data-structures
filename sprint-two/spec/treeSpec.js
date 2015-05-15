@@ -15,6 +15,10 @@ describe('tree', function() {
     expect(tree.hasOwnProperty("parent")).to.equal(true);
   });
 
+  it('should have a traverse method', function() {
+    expect(tree.traverse).to.be.a("function");
+  });
+
   it('should have a removeFromParent method', function() {
     expect(tree.removeFromParent).to.be.a("function");
   });
