@@ -11,6 +11,15 @@ describe('tree', function() {
     expect(tree.hasOwnProperty("value")).to.equal(true);
   });
 
+  it('should have a parent property', function() {
+    expect(tree.hasOwnProperty("parent")).to.equal(true);
+  });
+
+  it('parent should point to the nodes parent', function() {
+    tree.addChild(5);
+    expect(tree.children[0].parent).to.equal(tree);
+  });
+
   it('should add children to the tree', function() {
     tree.addChild(5);
     expect(tree.children[0].value).to.equal(5);
