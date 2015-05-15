@@ -63,31 +63,53 @@ describe('doublyLinkedList', function() {
     expect(linkedList.contains(4)).to.equal(false);
   });
 
-  it('should add links to the previous node in the list', function() {
-    linkedList.addToTail(4);
-    linkedList.addToTail(5);
-    expect(linkedList.tail.prev).to.not.equal(null);
+  describe('prev property', function() {
+    it('should add links to the previous node in the list', function() {
+      linkedList.addToTail(4);
+      linkedList.addToTail(5);
+      expect(linkedList.tail.prev).to.not.equal(null);
+    });
+
+    it('should have a null value in previous when there is only 1 item.', function(){
+      linkedList.addToTail(4);
+      expect(linkedList.prev).to.equal(null);
+    });
+
+    it('should link to the previous node via the previous property', function() {
+      linkedList.addToTail(4);
+      linkedList.addToTail(5);
+      expect(linkedList.tail).to.have.property('prev');
+      expect(linkedList.tail.prev.value).to.equal(4);
+    });
   });
 
-  it('should have a null value in previous when there is only 1 item.', function(){
-    linkedList.addToTail(4);
-    expect(linkedList.prev).to.equal(null);
+  describe('#addToHead', function() {
+    it('should be able to add values to the front of the list', function() {
+      linkedList.addToTail(4);
+      linkedList.addToTail(5);
+      expect(linkedList.head.value).to.equal(4);
+      linkedList.addToHead(5);
+      expect(linkedList.head.value).to.equal(5);
+    });
   });
 
-  it('should link to the previous node via the previous property', function() {
-    linkedList.addToTail(4);
-    linkedList.addToTail(5);
-    expect(linkedList.tail).to.have.property('prev');
-    expect(linkedList.tail.prev.value).to.equal(4);
-  });
+  describe('#removeTail', function() {
+    it('should return the value at the end of the list.', function() {
+      linkedList.addToTail(4);
+      linkedList.addToTail(5);
+      linkedList.addToTail(6);
+      linkedList.addToTail(7);
+      var result = linkedList.removeTail();
+      expect(result.value).to.equal(7);
+    });
 
-  it('should be able to add values to the front of the list', function() {
-    linkedList.addToTail(4);
-    linkedList.addToTail(5);
-    expect(linkedList.head.value).to.equal(4);
-    linkedList.addToHead(5);
-    expect(linkedList.head.value).to.equal(5);
-  });
+    it('should remove the last item in the list.', function() {
+      linkedList.addToTail(4);
+      linkedList.addToTail(5);
+      linkedList.addToTail(6);
+      linkedList.removeTail();
+      expect(linkedList.tail.value).to.equal(5);
+    });
 
-  // add more tests here to test the functionality of linkedList
+  });
 });
