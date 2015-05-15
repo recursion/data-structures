@@ -10,8 +10,8 @@ describe('doublyLinkedList', function() {
     expect(linkedList).to.have.property("tail");
   });
 
-  it('should have a previous property', function() {
-    expect(linkedList).to.have.property("previous");
+  it('should have a prev property', function() {
+    expect(linkedList).to.have.property("prev");
   });
 
   it('should have an addToHead method', function() {
@@ -61,6 +61,24 @@ describe('doublyLinkedList', function() {
     linkedList.addToTail(5);
     linkedList.removeHead();
     expect(linkedList.contains(4)).to.equal(false);
+  });
+
+  it('should add links to the previous node in the list', function() {
+    linkedList.addToTail(4);
+    linkedList.addToTail(5);
+    expect(linkedList.tail.prev).to.not.equal(null);
+  });
+
+  it('should have a null value in previous when there is only 1 item.', function(){
+    linkedList.addToTail(4);
+    expect(linkedList.prev).to.equal(null);
+  });
+
+  it('should link to the previous node via the previous property', function() {
+    linkedList.addToTail(4);
+    linkedList.addToTail(5);
+    expect(linkedList.tail).to.have.property('prev');
+    expect(linkedList.tail.prev.value).to.equal(4);
   });
 
   it('should be able to add values to the front of the list', function() {
