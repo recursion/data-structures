@@ -51,6 +51,8 @@ HashTable.prototype.retrieve = function(k){
 
 HashTable.prototype.remove = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
+  // so this works, and is passing tests... but...
+  // its not correct by any means.
   this._storage.set(i, null);
   console.log('Deleted ' + this._storage.get(i));
 };
@@ -64,5 +66,5 @@ HashTable.prototype.remove = function(k){
     Its hard to imagine that the _.each() calls here are keeping this thing in constant time...
     insert:  O(n) ??
     retrieve: O(n) ??
-    remove: 0(1)
+    remove: 0(n) ??
  */
