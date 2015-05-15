@@ -37,7 +37,7 @@ HashTable.prototype.retrieve = function(k){
     var bucket = this._storage.get(i);
     var result;
     _.each(bucket, function(val, index) {
-      if (index % 2 == 0) {
+      if (index % 2 === 0) {
         if (val === k) {
           result = bucket[index + 1];
         }
@@ -53,8 +53,15 @@ HashTable.prototype.remove = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
   // so this works, and is passing tests... but...
   // its not correct by any means.
-  this._storage.set(i, null);
-  console.log('Deleted ' + this._storage.get(i));
+  var bucket = this._storage.get(i);
+  console.log('Looking for '+k);
+  _.each(bucket, function(val, index) {
+    if (index % 2 === 0) {
+      if (val === k) {
+        bucket[index + 1] = null;
+      }
+    }
+  });
 };
 
 
