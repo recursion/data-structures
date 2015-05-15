@@ -17,6 +17,10 @@ treeMethods.addChild = function(value){
   this.children.push(newTree);
 };
 
+treeMethods.traverse = function() {
+
+};
+
 treeMethods.removeFromParent = function() {
   var index = this.parent.children.indexOf(this.value);
   this.parent.children.splice(index, 1);
