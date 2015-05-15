@@ -2,6 +2,7 @@ var DoublyLinkedList = function(){
   var list = {};
   list.head = null;
   list.tail = null;
+  list.previous = null;
 
   list.addToTail = function(value){
     var n = Node();
