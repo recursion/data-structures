@@ -67,9 +67,7 @@ BinarySearchTree.prototype.breadthFirstLog = function() {
       console.log(child.value);
       newList = newList.concat(findAndLogChildren(child));
     });
-    if (newList.length === 0) {
-      break;
-    }
+    // set childList to the list of these childrens children
     childList = newList;
   }
 
@@ -80,4 +78,5 @@ BinarySearchTree.prototype.breadthFirstLog = function() {
      insert: O(log(n)) logarithmic
      contains: O(log(n)) logarithmic
      depthFirstLog: O(n) linear
+     breadthFirstLog: O(n) linear
  */
