@@ -109,4 +109,5 @@ HashTable.prototype.reload = function(newLimit) {
     insert:  O(n) ??
     retrieve: O(n) ??
     remove: 0(n) ??
+    reload: 0(n2) polynomial
  */
