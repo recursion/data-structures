@@ -13,12 +13,8 @@ HashTable.prototype.insert = function(k, v){
 
     // If storage has reached 75% of max, double it
     if (this._storage.size + 1 >= this._limit * .75) {
-      var size = this._storage.size;
       var newLimit = this._limit * 2;
-      var newStorage = LimitedArray(newLimit);
-      this._limit = newLimit;
-      this.reload(newStorage);
-      this._storage.size = size;
+      this.reload(newLimit);
     }
   } else {
     var bucket = this._storage.get(i);
@@ -79,22 +75,21 @@ HashTable.prototype.remove = function(k){
       }
     });
     // If storage has reached 25% of max, halve it
-    console.log(this._storage.size);
     if (this._storage.size <= this._limit * .4) {
-      var size = this._storage.size;
       var newLimit = this._limit / 2;
-      var newStorage = LimitedArray(newLimit);
-      this._limit = newLimit;
-      this.reload(newStorage);
-      this._storage.size = size;
+      this.reload(newLimit);
     }
   }
 };
 
-HashTable.prototype.reload = function(newStorage) {
+HashTable.prototype.reload = function(newLimit) {
+  var size = this._storage.size;
+  var newStorage = LimitedArray(newLimit);
   var oldStorage = this._storage;
-  this._storage = newStorage;
   var that = this;
+  this._limit = newLimit;
+  this._storage = newStorage;
+
   oldStorage.each(function(bucket, index, collection) {
     // for each item in this bucket, insert it into our new array
     _.each(bucket, function(val, i, col) {
@@ -103,6 +98,7 @@ HashTable.prototype.reload = function(newStorage) {
       }
     });
   });
+  this._storage.size = size;
 };
 
 /*
