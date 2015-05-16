@@ -1,88 +1,91 @@
 var HashTable = function(){
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
-  this._storage.size = 0;
+  this._count = 0;
 };
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  if (!this._storage.get(i)) {
-    // should this be creating a limited array instead of a regular array?
-    this._storage.set(i, [k, v]);
-    this._storage.size++;
+  var bucket = this._storage.get(i);
+
+  if (!bucket) {
+    bucket = [];
+    this._storage.set(i, bucket);
+  }
+
+  var existing = false;
+  // iterate through each tuple at the current bucket.
+  _.each(bucket, function(tuple) {
+    if (tuple[0] === k) {
+      tuple[1] = v;
+      existing = true;
+    }
+  });
+  // if we did not find an existing matching key in the index to overwrite
+  // store the key and value at new indexes.
+  if (!existing) {
+    bucket.push([k, v]);
+    this._count++;
 
     // If storage has reached 75% of max, double it
-    if (this._storage.size + 1 >= this._limit * .75) {
+    if (this._size > this._limit * .75) {
       var newLimit = this._limit * 2;
-      this.reload(newLimit);
+      this._resize(newLimit);
     }
-  } else {
-    var bucket = this._storage.get(i);
-    var existing = false;
-    // iterate through each value at the current bucket.
-    _.each(bucket, function(val, index) {
-      // check only even indexes for our key
-      if (index % 2 === 0) {
-        if (val === k) {
-          bucket[index + 1] = v;
-          existing = true;
-        }
-      }
-    });
-    // if we did not find an existing matching key in the index to overwrite
-    // store the key and value at new indexes.
-    if (!existing) {
-      bucket[bucket.length] = k;
-      bucket[bucket.length] = v;
-    }
+
   }
+
 };
 
 HashTable.prototype.retrieve = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  if (this._storage.get(i)) {
-    var bucket = this._storage.get(i);
-    var result;
-    _.each(bucket, function(val, index) {
-      if (index % 2 === 0) {
-        if (val === k) {
-          result = bucket[index + 1];
-        }
-      }
-    });
-    return result;
-  } else {
+  var bucket = this._storage.get(i);
+  var result = null;
+
+  if (!bucket) {
     return null;
   }
+
+  _.each(bucket, function(tuple) {
+    if (tuple[0] === k) {
+      result = tuple[1];
+    }
+  });
+
+  return result;
+
 };
 
 HashTable.prototype.remove = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
 
   var bucket = this._storage.get(i);
+  var result;
 
   // if there is only 1 item in this bucket
   // decrement our total storage size
-  if (bucket) {
-    if (bucket.size >= 1) {
-      this._storage.size--;
-    }
-    _.each(bucket, function(val, index) {
-      if (index % 2 === 0) {
-        if (val === k) {
-          bucket[index + 1] = null;
-        }
-      }
-    });
-    // If storage has reached 25% of max, halve it
-    if (this._storage.size <= this._limit * .4) {
-      var newLimit = this._limit / 2;
-      this.reload(newLimit);
-    }
+  if (!bucket) {
+    return null;
   }
+
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      bucket.splice(i, 1);
+      return null;
+    }
+  };
+
+  this._count--;
+  // If storage has reached 25% of max, halve it
+  if (this._count <= this._limit * .25) {
+    var newLimit = this._limit / 2;
+    this._resize(newLimit);
+  }
+  return null;
 };
 
-HashTable.prototype.reload = function(newLimit) {
+HashTable.prototype._resize = function(newLimit) {
   var size = this._storage.size;
   var newStorage = LimitedArray(newLimit);
   var oldStorage = this._storage;
@@ -109,5 +112,5 @@ HashTable.prototype.reload = function(newLimit) {
     insert:  O(n) ??
     retrieve: O(n) ??
     remove: 0(n) ??
-    reload: 0(n2) polynomial
+    _resize: 0(n2) polynomial
  */
