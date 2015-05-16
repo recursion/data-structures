@@ -1,6 +1,7 @@
 var HashTable = function(){
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
+  this._storage.size = 0;
 };
 
 HashTable.prototype.insert = function(k, v){
@@ -8,15 +9,24 @@ HashTable.prototype.insert = function(k, v){
   if (!this._storage.get(i)) {
     // should this be creating a limited array instead of a regular array?
     this._storage.set(i, [k, v]);
+    this._storage.size++;
+
+    // If storage has reached 75% of max, double it
+    if (this._storage.size + 1 >= this._limit * .75) {
+      var size = this._storage.size;
+      var newLimit = this._limit * 2;
+      var newStorage = LimitedArray(newLimit);
+      this._limit = newLimit;
+      this.reload(newStorage);
+      this._storage.size = size;
+    }
   } else {
     var bucket = this._storage.get(i);
     var existing = false;
     // iterate through each value at the current bucket.
     _.each(bucket, function(val, index) {
-      // check even indexes only
+      // check only even indexes for our key
       if (index % 2 === 0) {
-        // check if the value in the even index matches the
-        // value of the key we are trying to store
         if (val === k) {
           bucket[index + 1] = v;
           existing = true;
@@ -52,20 +62,48 @@ HashTable.prototype.retrieve = function(k){
 
 HashTable.prototype.remove = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  // so this works, and is passing tests... but...
-  // its not correct by any means.
+
   var bucket = this._storage.get(i);
-  console.log('Looking for '+k);
-  _.each(bucket, function(val, index) {
-    if (index % 2 === 0) {
-      if (val === k) {
-        bucket[index + 1] = null;
-      }
+
+  // if there is only 1 item in this bucket
+  // decrement our total storage size
+  if (bucket) {
+    if (bucket.size >= 1) {
+      this._storage.size--;
     }
-  });
+    _.each(bucket, function(val, index) {
+      if (index % 2 === 0) {
+        if (val === k) {
+          bucket[index + 1] = null;
+        }
+      }
+    });
+    // If storage has reached 25% of max, halve it
+    console.log(this._storage.size);
+    if (this._storage.size <= this._limit * .4) {
+      var size = this._storage.size;
+      var newLimit = this._limit / 2;
+      var newStorage = LimitedArray(newLimit);
+      this._limit = newLimit;
+      this.reload(newStorage);
+      this._storage.size = size;
+    }
+  }
 };
 
-
+HashTable.prototype.reload = function(newStorage) {
+  var oldStorage = this._storage;
+  this._storage = newStorage;
+  var that = this;
+  oldStorage.each(function(bucket, index, collection) {
+    // for each item in this bucket, insert it into our new array
+    _.each(bucket, function(val, i, col) {
+      if (i % 2 === 0) {
+        that.insert(val, col[i+1]);
+      }
+    });
+  });
+};
 
 /*
  * Complexity: What is the time complexity of the above functions?
