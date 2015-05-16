@@ -92,9 +92,9 @@ HashTable.prototype.reload = function(newLimit) {
 
   oldStorage.each(function(bucket, index, collection) {
     // for each item in this bucket, insert it into our new array
-    _.each(bucket, function(val, i, col) {
+    _.each(bucket, function(value, i, thisCollection) {
       if (i % 2 === 0) {
-        that.insert(val, col[i+1]);
+        that.insert(value, thisCollection[i+1]);
       }
     });
   });
