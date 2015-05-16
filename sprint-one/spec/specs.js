@@ -141,6 +141,16 @@ define([
         expect(queue.dequeue()).to.equal('b');
       });
 
+      it('can handle large amounts of queuing', function() {
+        for (var i = 0; i < 20; i++) {
+          queue.enqueue(i);
+        }
+        for (var i = 0; i < 19; i++) {
+          queue.dequeue(i);
+        }
+        expect(queue.dequeue()).to.equal(19);
+      });
+
     });
 
     describe('queue-specific behavior', function(){
