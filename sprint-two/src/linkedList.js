@@ -21,6 +21,7 @@ var LinkedList = function(){
     return result;
   };
 
+// rewrite recursively
   list.contains = function(target){
     var contains = false;
     var node = list.head;
