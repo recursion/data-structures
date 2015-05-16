@@ -21,16 +21,18 @@ HashTable.prototype.insert = function(k, v){
       existing = true;
     }
   });
+
   // if we did not find an existing matching key in the index to overwrite
-  // store the key and value at new indexes.
+  // store the key and value in a new tuple.
   if (!existing) {
+
     bucket.push([k, v]);
+
     this._count++;
 
     // If storage has reached 75% of max, double it
-    if (this._size > this._limit * .75) {
-      var newLimit = this._limit * 2;
-      this._resize(newLimit);
+    if (this._count > this._limit * .75) {
+      this._resize(this._limit * 2);
     }
 
   }
@@ -72,36 +74,31 @@ HashTable.prototype.remove = function(k){
     var tuple = bucket[i];
     if (tuple[0] === k) {
       bucket.splice(i, 1);
+      this._count--;
+      // If storage has reached 25% of max, halve it
+      if (this._count < this._limit * .25) {
+        this._resize(this._limit / 2);
+      }
       return null;
     }
   };
 
-  this._count--;
-  // If storage has reached 25% of max, halve it
-  if (this._count <= this._limit * .25) {
-    var newLimit = this._limit / 2;
-    this._resize(newLimit);
-  }
   return null;
 };
 
 HashTable.prototype._resize = function(newLimit) {
-  var size = this._storage.size;
-  var newStorage = LimitedArray(newLimit);
   var oldStorage = this._storage;
   var that = this;
   this._limit = newLimit;
-  this._storage = newStorage;
+  this._storage = LimitedArray(newLimit);
+  this._count = 0;
 
-  oldStorage.each(function(bucket, index, collection) {
+  oldStorage.each(function(bucket) {
     // for each item in this bucket, insert it into our new array
-    _.each(bucket, function(value, i, thisCollection) {
-      if (i % 2 === 0) {
-        that.insert(value, thisCollection[i+1]);
-      }
+    _.each(bucket, function(tuple) {
+      that.insert(tuple[0], tuple[1]);
     });
   });
-  this._storage.size = size;
 };
 
 /*
